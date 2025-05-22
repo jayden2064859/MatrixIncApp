@@ -3,13 +3,21 @@ using DataAccessLayer.Interfaces;
 using DataAccessLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace KE03_INTDEV_SE_1_Base
+namespace MatrixInc
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDistributedMemoryCache(); // Vereist voor session
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Sessie timeout
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             // We gebruiken voor nu even een SQLite voor de database,
             // omdat deze eenvoudig lokaal te gebruiken is en geen extra configuratie nodig heeft.
@@ -24,8 +32,11 @@ namespace KE03_INTDEV_SE_1_Base
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
+
+  
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -44,6 +55,7 @@ namespace KE03_INTDEV_SE_1_Base
                 MatrixIncDbInitializer.Initialize(context);
             }
 
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

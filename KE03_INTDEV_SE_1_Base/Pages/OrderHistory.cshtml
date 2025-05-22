@@ -1,0 +1,86 @@
+﻿@page
+@model MatrixInc.Pages.OrderHistoryModel
+@{
+    ViewData["Title"] = "Mijn Bestelgeschiedenis";
+    var successMessage = HttpContext.Session.GetString("OrderSuccessMessage");
+    if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">@successMessage</div>
+        HttpContext.Session.Remove("OrderSuccessMessage");
+    }
+
+}
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        background-image: linear-gradient(to bottom, white 0%, white 45px, /* 120px witte ruimte bovenin (pas dit aan) */
+        #f0f0f0 120px, #f0f0f0 100%);
+        background-attachment: fixed;
+    }
+
+    .table {
+        width: 100%;
+    }
+
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            text-align: right;
+            width: 150px; /* Vaste breedte voor de prijskolom */
+            padding-right: 20px; /* Ruimte aan de rechterkant */
+        }
+
+        .table th:nth-child(1),
+        .table td:nth-child(1) {
+            width: auto; /* Productnaamkolom neemt resterende ruimte in */
+        }
+</style>
+
+<div class="container mt-5">
+    <h2>Mijn Bestelgeschiedenis</h2>
+
+    @if (Model.Orders == null || !Model.Orders.Any())
+    {
+        <div class="alert alert-info mt-4">
+            Je hebt nog geen bestellingen geplaatst.
+        </div>
+    }
+    else
+    {
+        <div class="mt-4">
+            @foreach (var order in Model.Orders)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Bestelling #@order.Id - @order.OrderDate.ToString("dd-MM-yyyy HH:mm")</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Totaalbedrag</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in order.Products)
+                                {
+                                    <tr>
+                                        <td>@product.Name</td>
+                                        <td>€@product.Price.ToString("0.00")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Totaal</th>
+                                    <th>€@order.Products.Sum(p => p.Price).ToString("0.00")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

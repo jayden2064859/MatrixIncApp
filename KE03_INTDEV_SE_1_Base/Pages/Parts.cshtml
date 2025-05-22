@@ -1,0 +1,120 @@
+﻿@page
+@model MatrixInc.Pages.PartsModel
+@{
+    ViewData["Title"] = "Onze Parts";
+}
+
+<style>
+
+    body {
+        background-color: #f0f0f0;
+        background-image: linear-gradient(to bottom, white 0%, white 45px, /* 120px witte ruimte bovenin (pas dit aan) */
+        #f0f0f0 120px, #f0f0f0 100%);
+        background-attachment: fixed;
+    }
+
+
+    .product-background {
+        background-color: #f0f0f0;
+        padding: 25px 0; /* Pas aan naar wens */
+        margin-bottom: 25px;
+        border-radius: 8px; /* Optioneel: afgeronde hoeken */
+    }
+
+    .product-card .card-img-top {
+        width: 100%;
+        height: 200px; /* Vaste hoogte */
+        object-fit: contain; /* Behoudt verhoudingen */
+        object-position: center; /* Centreert de afbeelding */
+    }
+
+    .product-card {
+        height: 100%; /* Zorgt voor gelijke kaarthoogtes */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body {
+        flex-grow: 1; /* Zorgt dat de footer onderaan blijft */
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">@ViewData["Title"]</h1>
+
+    <div style="position: relative; width: 40%; min-width: 300px; margin-top: 15px;">
+        <input type="text" id="search" placeholder="Zoek een product..."
+               style="width: 100%; padding: 10px 40px 10px 15px;
+                      font-size: 16px; border: 1px solid #ddd;
+                      border-radius: 4px; box-sizing: border-box;">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             onclick="searchProducts()"
+             style="position: absolute; right: 12px; top: 50%;
+                    transform: translateY(-50%); pointer-events: auto;
+                    cursor: pointer; width: 24px; height: 24px;"
+             viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+    </div>
+</div>
+
+
+<div class="product-background">
+<div class="row">
+    @foreach (var part in Model.Parts)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card product-card">
+                <a asp-page="/Order" asp-route-id="@part.Id" asp-route-type="Part">
+                    <img src="/images/@part.ImageUrl" class="card-img-top" alt="@part.Name" />
+                </a>
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        <a asp-page="/Order" asp-route-id="@part.Id" asp-route-type="Part"
+                           style="color: inherit; text-decoration: none;">
+                            @part.Name
+                        </a>
+                    </h5>
+
+                    <p class="price-text">
+                        €@part.Price.ToString("0.00")
+                    </p>
+                    <form method="post" asp-page-handler="AddToCart">
+                        <input type="hidden" name="partId" value="@part.Id" />
+                        <div class="d-flex align-items-center gap-2">
+                            <select name="quantity" class="form-select form-select-sm" style="width: 60px;">
+                                @for (int i = 1; i <= 10; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn" style="background-color: #fdd835; color: black;">
+                                <span class="me-1">+</span>
+                                <i class="bi bi-cart"></i>
+                            </button>
+                        </div>
+                        @Html.AntiForgeryToken()
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        function searchProducts() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.col-md-3.mb-4').forEach(col => {
+                col.style.display = col.querySelector('.card-title').textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        document.getElementById('search').addEventListener('input', searchProducts);
+        document.getElementById('search').addEventListener('keypress', e => e.key === 'Enter' && searchProducts());
+    </script>
+}

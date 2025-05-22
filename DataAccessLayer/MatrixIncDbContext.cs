@@ -16,25 +16,35 @@ namespace DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Customer-Order relatie (one-to-many)
             modelBuilder.Entity<Customer>()
                 .HasMany(c => c.Orders)
                 .WithOne(o => o.Customer)
-                .HasForeignKey(o => o.CustomerId).IsRequired();
+                .HasForeignKey(o => o.CustomerId)
+                .IsRequired();
 
-            //modelBuilder.Entity<Order>()
-            //    .HasOne(o => o.Customer)
-            //    .WithMany(c => c.Orders)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
+            // Product-Order many-to-many (met expliciete join table configuratie)
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Orders)
-                .WithMany(o => o.Products);
+                .WithMany(o => o.Products)
+                .UsingEntity<Dictionary<string, object>>(
+                    "OrderProduct", // Naam van de join table
+                    j => j.HasOne<Order>().WithMany().HasForeignKey("OrdersId"),
+                    j => j.HasOne<Product>().WithMany().HasForeignKey("ProductsId"),
+                    j =>
+                    {
+                        j.HasKey("OrdersId", "ProductsId"); // Samengestelde primary key
+                        j.ToTable("OrderProduct"); // Expliciete tabelnaam
+                    });
 
+            // Part-Product many-to-many (indien je deze blijft gebruiken)
             modelBuilder.Entity<Part>()
                 .HasMany(p => p.Products)
-                .WithMany(p => p.Parts);
+                .WithMany(p => p.Parts)
+                .UsingEntity(j => j.ToTable("PartProduct"));
 
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }

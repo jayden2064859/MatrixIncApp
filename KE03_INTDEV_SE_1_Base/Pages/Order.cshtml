@@ -1,0 +1,126 @@
+﻿@page
+@model MatrixInc.Pages.OrderModel
+@{
+    ViewData["Title"] = "Bestelling plaatsen";
+}
+
+<style>
+
+    .product-image-large {
+        max-width: 100%;
+        height: 400px;
+        object-fit: contain;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+    }
+
+    .product-description {
+        font-size: 1.1rem;
+        margin: 20px 0;
+        line-height: 1.6;
+    }
+
+    .part-image-large {
+        max-width: 100%;
+        height: 400px;
+        object-fit: contain;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+    }
+
+    .part-description {
+        font-size: 1.1rem;
+        margin: 20px 0;
+        line-height: 1.6;
+    }
+
+</style>
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+
+    @if (Model.Product != null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <img src="/images/@Model.Product.ImageUrl" class="product-image-large" alt="@Model.Product.Name">
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">@Model.Product.Name</h2>
+                        <p class="price-text-order">€@Model.Product.Price.ToString("0.00")</p>
+
+                        <div class="product-description">
+                            @Model.Product.Description
+                        </div>
+                        <form method="post" asp-page-handler="AddToCart" class="mt-4">
+                            <input type="hidden" name="@(Model.Product != null ? "productId" : "partId")"
+                                   value="@(Model.Product != null ? Model.Product.Id : Model.Part.Id)" />
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- gap vergroot naar 3 -->
+                                <select name="quantity" class="form-select" style="width: 80px; height: 46px; font-size: 1.1rem;">
+                                    <!-- Grotere select -->
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn py-2 px-3" style="background-color: #fdd835; color: black; font-size: 1.1rem; height: 46px;">
+                                    <span class="me-1">+</span>
+                                    <i class="bi bi-cart" style="font-size: 1.2rem;"></i> <!-- Groter icoon -->
+                                </button>
+                            </div>
+                            @Html.AntiForgeryToken()
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model.Part != null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <img src="/images/@Model.Part.ImageUrl" class="part-image-large" alt="@Model.Part.Name">
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">@Model.Part.Name</h2>
+                        <p class="h4 text-primary">€@Model.Part.Price.ToString("0.00")</p>
+                        <div class="part-description">
+                            @Model.Part.Description
+                        </div>
+                        <form method="post" asp-page-handler="AddToCart">
+                            <input type="hidden" name="partId" value="part.Id" />
+                            <div class="d-flex align-items-center gap-2">
+                                <select name="quantity" class="form-select form-select-sm" style="width: 60px;">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn" style="background-color: #fdd835; color: black;">
+                                    <span class="me-1">+</span>
+                                    <i class="bi bi-cart"></i>
+                                </button>
+                            </div>
+                            @Html.AntiForgeryToken()
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            <p>Item niet gevonden.</p>
+            <a asp-page="/Products" class="btn btn-primary">Terug naar producten</a>
+        </div>
+    }
+</div>

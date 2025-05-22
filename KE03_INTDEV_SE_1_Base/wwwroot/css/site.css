@@ -1,3 +1,4 @@
+
 html {
   font-size: 14px;
 }
@@ -20,3 +21,243 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+a[href="/ShoppingCart"] {
+    transform: translateY(6px); 
+}
+
+.custom-nav-link {
+    transform: translateY(8px)
+}
+.nav-right-items a {
+    transform: translateY(8x)
+}
+.nav-right-items .nav-item {
+    transform: translateY(8px); 
+}
+
+.nav-right-items .nav-item a[href="/Login"] {
+    transform: translateY(-4px); 
+}
+
+.nav-right-items .nav-link[onclick="openLoginModal()"] {
+    transform: translateY(6px); /* Pas deze waarde aan */
+    display: inline-block;
+}
+.custom-nav-container .text-muted {
+    margin-top: 8px;
+}
+
+.navbar-brand {
+    transform: translateY(8px);
+}
+
+.custom-nav-container {
+    justify-content: space-between !important; /* Zorgt voor maximale ruimte tussen links en rechter items */
+}
+
+.nav-right-items {
+    margin-left: auto; /* Duwt de items naar rechts */
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Ruimte tussen Inloggen en Winkelwagen */
+    padding-left: 3rem; /* Ruimte tussen de laatste nav-link en deze items */
+}
+
+.navbar .custom-nav-link.active {
+    position: relative;
+    text-decoration: none;
+}
+
+    .navbar .custom-nav-link.active::after {
+        content: '';
+        position: absolute;
+        left: 15px; 
+        bottom: 8px; 
+        width: calc(100% - 30px); 
+        height: 2px;
+        background-color: currentColor;
+        transform: scaleX(1);
+        transition: transform 0.3s ease;
+    }
+
+.price-text {
+    font-family: 'DIN Next LT Pro Bold', 'FF DIN Bold', 'DIN Bold', 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 700; 
+    color: #ba2828; 
+    letter-spacing: -0.5px; 
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1); 
+}
+
+.price-text-order{
+    font-family: 'DIN Next LT Pro Bold', 'FF DIN Bold', 'DIN Bold', 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 700; 
+    color: #ba2828; 
+    letter-spacing: -0.5px; 
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1); 
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+    width: 500px;
+    max-width: 90%;
+    z-index: 1000;
+    max-height: 45vh;
+    overflow-y: auto;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+    .modal.active, .modal-overlay.active {
+        display: block;
+    }
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Margin/padding helpers */
+.mt-1 {
+    margin-top: 0.25rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+/* Flex utilities */
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.margin-top {
+    margin-top: 65px; 
+}
+
+.input-box {
+    width: 80%; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+    width: 300px; /* Smallere breedte */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
+}
+
+
+    .notification.warning {
+        background-color: #FF9800; /* Oranje */
+    }
+
+    .notification.info {
+        background-color: #2196F3; /* Blauw */
+    }
+
+    .notification.success {
+        background-color: #28a745;
+    }
+
+    .notification.error {
+        background-color: #dc3545;
+    }
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.alert-info {
+    width: 200px;
+    margin-top: 45px;
+    margin-bottom: 25px;
+}
+
+.alert-info2 {
+    width: 600px;
+    margin-top: 45px;
+    margin-bottom: 25px;
+
+}
+

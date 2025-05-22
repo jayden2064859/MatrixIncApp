@@ -17,9 +17,12 @@ namespace DataAccessLayer.Models
         public string Name { get; set; }
 
         [Required]
+        public string Password { get; set; } 
+
+        [Required]
         public string Address { get; set; }
 
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
 
         public ICollection<Order> Orders { get; } = new List<Order>();
     }

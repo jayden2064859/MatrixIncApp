@@ -3,39 +3,63 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<div class="alert-info">
-    <p class="p-1">
-        Dit project kun je gebruiken als startpunt voor de individuele inleveropdracht: <a href="https://moodle.zuyd.nl/mod/resource/view.php?id=1262065">KE03_INTDEV_SE_1</a>
 
-        <ul>
-            <li>Wat ga je maken: Een gebruiksvriendelijk online bestelsysteem voor een klant om producten te bestellen.</li>
-            <li>
-                Hoe ga je dit maken?<br />
-                - Individuele inleveropdracht.<br/>
-                - Pas de principes van HCI toe (bijv. Paper prototyping, design principles etc…)<br />
-                - Maak gebruik van: .NET core razor pages met bijbehorende zaken zoals, html, css, js, bootstrap, jquery<br />
-                - Maak gebruik van git en github voor source control van jouw code<br />
-            </li>
-            <li>
-                Je krijgt een dal (data access layer) meegeleverd. Qua inhoud is die niet perfect gevuld, maar qua structuur biedt die voldoende om een mooi bestel systeem te kunnen maken. <br /> 
-                Maar mis je iets, je bent vrij om alles naar wens aan te passen! Ben creatief!
-            </li>
-        </ul>
-    </p>
+<style>
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden; /* Voorkom horizontale scroll */
+    }
+    /* Hero sectie met video-achtergrond */
+    .hero-container {
+        position: relative;
+        width: 110vw;
+        height: 90vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Video achtergrond */
+    .hero-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        min-width: 100%;
+    }
+
+    /* Donkere overlay voor betere zichtbaarheid (optioneel) */
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 0;
+    }
+</style>
+
+
+<div class="hero-container">
+    <!-- Bewegende achtergrond video -->
+    <video autoplay muted loop class="hero-video">
+        <source src="~/videos/Matrix-new.mp4" type="video/mp4">
+        <!-- Fallback als video niet werkt -->
+        <img src="~/images/matrixlogo3.jpg" alt="Fallback image">
+    </video>
+    <!-- Donkere overlay (optioneel) -->
+    <div class="video-overlay"></div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Klant</th>
-            <th>Aantal Orders</th>
-        </tr>
-    </thead>
-    @foreach (var c in Model.Customers)
-    {        
-        <tr>
-            <td>@Html.DisplayName(c.Name)</td>
-            <td>@Html.DisplayName(c.Orders.Count.ToString())</td>           
-        </tr>
-    }
-</table>

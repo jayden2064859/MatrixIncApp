@@ -1,6 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using MatrixInc.Extensions
+@using MatrixInc.Models
+@using Microsoft.AspNetCore.Http
+@inject DataAccessLayer.MatrixIncDbContext DbContext
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KE03_INTDEV_SE_1_Base</title>
@@ -9,23 +15,90 @@
     <link rel="stylesheet" href="~/KE03_INTDEV_SE_1_Base.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div id="loginModal" class="modal">
+        <div>
+            <h2 class="text-center mt-3 mb-4">Inloggen</h2>
+            <form id="loginForm" method="post" asp-page="/Login" class="flex-column">
+                @Html.AntiForgeryToken()
+                <div class="form-group text-left mb-3 input-box">
+                    <label>Gebruikersnaam</label>
+                    <input name="Username" class="form-control mt-1" required />
+                </div>
+                <div class="form-group text-left mb-4 input-box">
+                    <label>Wachtwoord</label>
+                    <input name="Password" type="password" class="form-control mt-1" required />
+                </div>
+                <div id="loginError" class="text-danger mb-3 text-center" style="display:none;"></div>
+                <div class="modal-buttons d-flex justify-content-end gap-2">
+                    <button type="button" onclick="closeLoginModal()" class="btn btn-secondary margin-top">Terug</button>
+                    <button type="submit" class="btn btn-primary margin-top">Inloggen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div class="modal-overlay" id="loginOverlay"></div>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm @(ViewData["NavbarStyle"] ?? "navbar-light") bg-white mb-3 custom-navbar">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">KE03_INTDEV_SE_1_Base</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">Matrix Inc.</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center">
+                    <div class="d-flex flex-grow-1 custom-nav-container justify-content-center">
+                     
+                        <div class="nav-item px-2 d-flex align-items-center">
+                            <a class="nav-link text-dark custom-nav-link @(Context.Request.Path.StartsWithSegments("/Products") ? "active" : "")" asp-area="" asp-page="/Products">Products</a>
+                            <span class="text-muted px-1">|</span>
+                        </div>
+                      
+                        <div class="nav-item px-2 d-flex align-items-center">
+                            <a class="nav-link text-dark custom-nav-link @(Context.Request.Path.StartsWithSegments("/Parts") ? "active" : "")" asp-area="" asp-page="/Parts">Parts</a>
+                            <span class="text-muted px-1">|</span>
+                        </div>
+                        <div class="nav-item px-2 d-flex align-items-center">
+                            <a class="nav-link text-dark custom-nav-link @(Context.Request.Path.StartsWithSegments("/Privacy") ? "active" : "")" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 nav-right-items">
+                            @if (Context.Session.GetInt32("UserId") != null)
+                            {
+                                var userId = Context.Session.GetInt32("UserId");
+                                var user = await DbContext.Customers.FindAsync(userId);
+
+                                <div class="dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @user.Name
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-page="/OrderHistory">Mijn bestellingen</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="post" asp-page="/Login" asp-page-handler="Logout">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="dropdown-item">Uitloggen</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="#" onclick="openLoginModal()">Inloggen</a>
+                            }
+                            <a href="/ShoppingCart" class="btn btn-outline-primary position-relative">
+                                <i class="bi bi-cart"></i>
+                                @{
+                                    var cart = Context.Session.Get<ShoppingCart>("Cart");
+                                    if (cart != null && cart.TotalItems > 0)
+                                    {
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            @cart.TotalItems
+                                        </span>
+                                    }
+                                }
+                            </a>
+                        </div>
                 </div>
             </div>
         </nav>
@@ -36,12 +109,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - KE03_INTDEV_SE_1_Base - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -49,3 +116,81 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<script>
+
+        // Open modal
+    function openLoginModal() {
+        document.getElementById("loginModal").classList.add("active");
+        document.getElementById("loginOverlay").classList.add("active");
+    }
+
+    // Close modal
+    function closeLoginModal() {
+        document.getElementById("loginModal").classList.remove("active");
+        document.getElementById("loginOverlay").classList.remove("active");
+    }
+
+        document.addEventListener('DOMContentLoaded', function() {
+        // Voor success messages
+        var successMessage = '@TempData["Message"]';
+        var warningMessage = '@TempData["WarningMessage"]';
+        var errorMessage = '@TempData["ErrorMessage"]';
+
+        if (successMessage) {
+            showNotification(successMessage, 'success');
+        }
+
+        if (errorMessage) {
+            showNotification(errorMessage, 'error');
+        }
+
+        if (warningMessage) {
+            showNotification(warningMessage, 'warning');
+        }
+    });
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // AJAX form submission
+    document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch(e.target.action, {
+                method: "POST",
+                headers: {
+                    "RequestVerificationToken": document.querySelector("input[name='__RequestVerificationToken']").value
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                location.reload(); // Refresh to update auth state
+            } else {
+                document.getElementById("loginError").textContent = result.error;
+                document.getElementById("loginError").style.display = "block";
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
+    });
+
+         document.getElementById('loginForm').addEventListener('submit', function() {
+        localStorage.setItem('retryCheckoutAfterLogin', 'true');
+    });
+
+</script>
