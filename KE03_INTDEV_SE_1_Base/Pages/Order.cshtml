@@ -36,14 +36,35 @@
         line-height: 1.6;
     }
 
+    .order {
+        margin-top: 50px;
+    }
+
+    .back-button {
+        margin-left: 10px;
+        margin-top: 25px;
+        padding: 8px 16px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
 </style>
 
-<div class="container">
-    <h1>@ViewData["Title"]</h1>
+<button onclick="window.history.back();" class="back-button">
+    ← Terug naar producten
+</button>
+
 
     @if (Model.Product != null)
     {
-        <div class="row">
+        <div class="row order">
             <div class="col-md-6">
                 <img src="/images/@Model.Product.ImageUrl" class="product-image-large" alt="@Model.Product.Name">
             </div>
@@ -82,7 +103,7 @@
     }
     else if (Model.Part != null)
     {
-        <div class="row">
+        <div class="row order">
             <div class="col-md-6">
                 <img src="/images/@Model.Part.ImageUrl" class="part-image-large" alt="@Model.Part.Name">
             </div>
