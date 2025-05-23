@@ -21,7 +21,7 @@ namespace MatrixInc.Pages
         public int ItemId { get; set; }
 
         [BindProperty]
-        public string ItemType { get; set; } // "Product" of "Part"
+        public string ItemType { get; set; } 
 
         public Product Product { get; set; }
         public Part Part { get; set; }

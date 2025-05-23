@@ -41,7 +41,7 @@ a[href="/ShoppingCart"] {
 }
 
 .nav-right-items .nav-link[onclick="openLoginModal()"] {
-    transform: translateY(6px); /* Pas deze waarde aan */
+    transform: translateY(6px); 
     display: inline-block;
 }
 .custom-nav-container .text-muted {
@@ -53,15 +53,15 @@ a[href="/ShoppingCart"] {
 }
 
 .custom-nav-container {
-    justify-content: space-between !important; /* Zorgt voor maximale ruimte tussen links en rechter items */
+    justify-content: space-between !important; 
 }
 
 .nav-right-items {
-    margin-left: auto; /* Duwt de items naar rechts */
+    margin-left: auto; 
     display: flex;
     align-items: center;
-    gap: 1.5rem; /* Ruimte tussen Inloggen en Winkelwagen */
-    padding-left: 3rem; /* Ruimte tussen de laatste nav-link en deze items */
+    gap: 1.5rem; 
+    padding-left: 3rem; 
 }
 
 .navbar .custom-nav-link.active {

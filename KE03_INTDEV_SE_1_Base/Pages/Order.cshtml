@@ -60,9 +60,9 @@
                             <input type="hidden" name="@(Model.Product != null ? "productId" : "partId")"
                                    value="@(Model.Product != null ? Model.Product.Id : Model.Part.Id)" />
                             <div class="d-flex align-items-center gap-3">
-                                <!-- gap vergroot naar 3 -->
+                  
                                 <select name="quantity" class="form-select" style="width: 80px; height: 46px; font-size: 1.1rem;">
-                                    <!-- Grotere select -->
+                            
                                     @for (int i = 1; i <= 10; i++)
                                     {
                                         <option value="@i">@i</option>
@@ -70,7 +70,7 @@
                                 </select>
                                 <button type="submit" class="btn py-2 px-3" style="background-color: #fdd835; color: black; font-size: 1.1rem; height: 46px;">
                                     <span class="me-1">+</span>
-                                    <i class="bi bi-cart" style="font-size: 1.2rem;"></i> <!-- Groter icoon -->
+                                    <i class="bi bi-cart" style="font-size: 1.2rem;"></i> 
                                 </button>
                             </div>
                             @Html.AntiForgeryToken()
